@@ -1,0 +1,12 @@
+{
+  "short_name": "Anobis APP",
+  "name": "Powers Data Analytics",
+  "icons": [
+    {
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
