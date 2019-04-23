@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import {observer , inject} from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { uniqBy } from 'lodash/array';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 import {
-  Autocomplete,DatePicker,
+  Autocomplete, DatePicker,
   Button,
   DialogContainer,
   Toolbar
@@ -12,254 +14,171 @@ import {
 
 import StateChip from './stateChip';
 import { toJS } from 'mobx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faWindowClose, faFilter } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose, faFilter } from '@fortawesome/free-solid-svg-icons';
 
 @inject('ProfileStore')
 @observer
 export default class Home extends Component {
-  constructor(){
-    super();
-    this.show = this.show.bind(this);
+  constructor(props) {
+
+    super(props);
   }
 
-  setNextState = (selectedMails) => {
-    this.props.ProfileStore.setNextState(selectedMails);
-  };
-
-  addState = (abbreviation, index, matches) => {
-     const state = matches[index];
-     let oldselectedMails =toJS(this.props.ProfileStore.selectedMails);
-     const selectedMails = uniqBy([...oldselectedMails, state], s => s.name);
-    this.setNextState(selectedMails);
-  };
-
-  getCharts = () => {
-   this.props.ProfileStore.getCharts();
-  }
-
-  hide = () =>{
-    this.props.ProfileStore.showBusinessDialog = false;
-  }
-
-  hideFilterDialog =() =>{
-    this.props.ProfileStore.showFilterDialog = false;
-  }
-  showFilter = () =>{
-    this.props.ProfileStore.getFiltersData(this.show);
-  }
-
-  handleOnItemClick = (item) => {
-    let value = item.target.innerText ;
-    this.props.ProfileStore.handleOnItemClick(value);
-  }
-
-  handleOnAutoComplete = (value) => {
-    this.props.ProfileStore.handleOnAutoComplete(value);
-  }
-
-   show = function(list){
-    this.props.ProfileStore.filteredMails = list.map((item)=>{
-      item['name'] = item['id'];
-      return item;
-    });
-    this.props.ProfileStore.showFilterDialog = true;
-   }
-
-   apply = ()=>{
+  apply = ()=>{
       this.props.ProfileStore.callChartWithFilters();
-   }
-
-   handleOnChartClick = (item) => {
-     debugger;
-    let id = item._targetInst.key;
-    id = parseInt(id,10)
-    this.props.ProfileStore.handleOnChartClick(id);
   }
 
-  onMyFrameLoad = (event) => {
-    // let ev = event.currentTarget;
-    
-    // let ifstyle = document.getElementById('iframestyle')
-    // let iframe = window.frames["MyFrame1"];
-    // iframe.document.head.appendChild(ifstyle)
-    
+  search = () => {
+    this.props.ProfileStore.searchbyFilter();
+  }
 
-    // setTimeout(function(){
-    //   var iframe = document.getElementById('MyFrame1');
-    //   //var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-    //   document.getElementById("MyFrame1").contentWindow;
+  onChange = value => {
+    this.props.ProfileStore.selectedOption = value
+  };
 
-    //   //ev.getElementsByClassName('panel-default')
-    // }.bind(ev),1000)
-    
+  onExpChange = value => {
+    this.props.ProfileStore.selectedExpOption = value
   };
 
   render() {
 
+
+    let { jobsfeed,selectedOption, chartsList, sampleData, showFilteredData, filteredData, showBusinessDialog, title, showFilterDialog, selectedMails, filteredMails } = this.props.ProfileStore;
+
     
-    let {chartsList,sampleData,showFilteredData,filteredData,showBusinessDialog,title,showFilterDialog,selectedMails, filteredMails } = this.props.ProfileStore;
     
-    sampleData= toJS(sampleData);
-    filteredData= toJS(filteredData);
-    selectedMails= toJS(selectedMails);
+    filteredData = toJS(filteredData);
+    selectedMails = toJS(selectedMails);
     filteredMails = toJS(filteredMails);
-    sampleData= showFilteredData? filteredData:sampleData;
-    const chips = selectedMails && selectedMails.map(state => <StateChip key={state.abbreviation} state={state} />);
-    
+    debugger;
+    // if(filteredData.length>0){
+    //   jobsfeed = toJS(filteredData);
+    // }
+    // else{
+    //   jobsfeed = toJS(jobsfeed);
+    // }
 
-    let items =  sampleData && sampleData.map((item) =>
-        <div onClick={this.handleOnItemClick}  key={item}  style={{backgroundColor:"#ef9f0ef7",width:'48vw',height:'19vh',display:'flex',justifyContent:'center',alignItems:'center',border: '4px solid grey'}}>
-            <div className='sampleChartItem'>{item}</div>
+    jobsfeed = toJS(jobsfeed);
+
+    let jobsfeedContent = jobsfeed && jobsfeed.map((item) =>
+      <div key={item.id} className="card" >
+        <div className="profile">
+
+
+          <div className='profileItems'>
+            <div className="profileLabel">{`JobTitle`}</div>
+            <div className="profileContent">{item.title}</div>
+          </div>
+          <div className='profileItems'>
+            <div className="profileLabel">{`Company`}</div>
+            <div className="profileContent">{item.companyname}</div>
+          </div>
+          <div className='profileItems'>
+            <div className="profileLabel">{`Location`}</div>
+            <div className="profileContent">{item.location}</div>
+          </div>
+          <div className='profileItems'>
+            <div className="profileLabel">{`Salary`}</div>
+            <div className="profileContent">{item.salary}</div>
+          </ div>
+          <div className='profileItems'>
+            <div className="profileLabel">{`Start Data`}</div>
+            <div className="profileContent">{item.startdate}
+            </div>
+          </div>
+          <div className='profileItems'>
+            <div className="profileLabel">{`End Date`}</div>
+            <div className="profileContent">{item.enddate}</div>
+          </div>
+          <div className='profileItems'>
+            <div className="profileLabel">{`Apply Link`}</div>
+            <div className="profileContent"><a href={item.applylink} target="_blank">{item.applylink}</a></div>
+          </div>
+
         </div>
-    )
-
-    let charts =  chartsList && chartsList.map((item) =>
-      <div key={item.id} className="card" onClick={this.handleOnChartClick} >
-        <iframe key={item.id+'10'} onClick={this.handleOnChartClick} className="iframe-item" title="MyFrame" id={item.id} src={item.url}/>
       </div>
     );
-    
+
+    const options = [
+      { value: 'bengaluru', label: 'Bengaluru' },
+      { value: 'mumbai', label: 'Mumbai' },
+      { value: 'kochi', label: 'Kochi/Cochin' },
+      { value:'Kolkata', label:'Kolkata' },
+      { value:'Hyderabad', label:'Hyderabad' },
+      { value:'New Delhi', label:'New Delhi' },
+      { value:'Thiruvananthapuram', label:'Thiruvananthapuram' },
+      { value:'Tumkur', label:'Tumkur' }
+    ];
+
+    const expOptions = [
+      { value: '0', label: 'Fresher' },
+      { value: '1', label: '1' },
+      { value: '2', label: '2' },
+      { value:'3', label:'3' },
+      { value:'4', label:'4' },
+      { value:'5', label:'5' },
+      { value:'6', label:'6' },
+      { value:'7', label:'7' },
+      { value:'8', label:'8' },
+      { value:'9', label:'9' },
+      { value: '10', label: '10' },
+      { value: '11', label: '11' },
+      { value: '12', label: '12' },
+      { value:'13', label:'13' },
+      { value:'14', label:'14' },
+      { value:'15', label:'15' },
+      { value:'16', label:'16' },
+      { value:'17', label:'17' },
+    ];
+
     return (
-        <div  style={{backgroundColor:"white",display:'flex',height:'100vh',flexDirection: 'column'}}>
-            
+      <div style={{ backgroundColor: "white", display: 'flex', height: '100vh', flexDirection: 'column' }}>
 
-           <div className="header">
-             <div className='heading'> ANOBIS</div>
-             <div className='subHeading'>powered by compass</div>
-             </div>
-           <div style={{backgroundColor:"white",display:'flex',justifyContent:'center',flexDirection: 'row',paddingBottom:'5vh'}}>
-            <div style={{width:'98vw'}}>
-                <Autocomplete
-                    id="anobis"
-                    label="Type to search"
-                    placeholder="Type to search"
-                    data={sampleData}
-                    simplifiedMenu={false}
-                    onAutocomplete={this.handleOnAutoComplete}
-                />
-            </div>
-           
-           </div>
-           
-            <div style={{display:'flex',height:'100vh',flexDirection: 'row',justifyContent:'space-around',flexWrap:'wrap'}}>
-                {items}
-            </div>
-            <DialogContainer style={{width:"100vw",height:"100vh"}}
-                id="business-dialog"
-                visible={showBusinessDialog}
-                fullPage
-                onHide={this.hide}
-                aria-labelledby="business-dialog-title"
-                >
-                <Toolbar
-                    fixed
-                    colored
-                    title={title}
-                    titleId="simple-full-page-dialog-title"
-                     nav={<Button icon primary onClick={this.hide}><FontAwesomeIcon color="#ff0000b8"  icon={faWindowClose} size="2x"/></Button>}
-                    actions={<Button icon primary onClick={this.showFilter}><FontAwesomeIcon color="#04a9f4" icon={faFilter} size="2x"/></Button>}
-                />
-                <section className="md-toolbar-relative">
-                  <div className='displaySection'>
-                  <div className="scrolling-wrapper">
-                    {charts}
-                  </div>
-                      {/* <div className='scrollBar'>
-                          <HorizontalExample />
-                      </div> */}
-                      <div id="chartRender" className='displayBar'>
-                          <div className="displayBarItem">
-                            <iframe onLoad={this.onMyFrameLoad} className="displayBarIframe" title="MyFrame1" id="MyFrame1" 
-                              src="http://compass-mobile.swiggyops.de/superset/slice/412/">
-                              <p>Your browser does not support iframes.</p>
-                            </iframe>
-                            {/* <div className="a"></div> */}
-                          </div>
-                          <div className="displayBarItem">
-                            <iframe className="displayBarIframe" title="MyFrame2" id="MyFrame2" 
-                              src="http://compass-mobile.swiggyops.de/superset/slice/425/">
-                              <p>Your browser does not support iframes.</p>
-                            </iframe>
-                            {/* <div className="a"></div> */}
-                          </div>
 
-                          
-                      </div>
-                  
-                  </div>
-                </section>
-            </DialogContainer>
-            {filteredMails && <DialogContainer className='filterDialog'
-                id="filter-dialog"
-                visible={showFilterDialog}
-                onHide={this.hideFilterDialog}
-                aria-labelledby="filter-dialog-title"
-                >
-                <Toolbar
-                    fixed
-                    colored
-                    title={`Select filters`}
-                    titleId="simple-full-page-dialog-title"
-                    actions={<Button icon primary onClick={this.hideFilterDialog}><FontAwesomeIcon color='#ff0000b8' icon={faWindowClose} size="2x"/></Button>
-                    }
-                />
-                <section className="md-toolbar-relative">
-                {/* <h4 className="md-cell md-cell--12">Using SVGIcons</h4>
-    
-                  <SelectField
-                    id="select-field-8"
-                    placeholder="Select Chart"
-                    className="md-cell md-cell--bottom"
-                    menuItems={STRING_ITEMS}
-                    position={SelectField.Positions.BELOW}
-                    dropdownIcon={icon}
-                    simplifiedMenu={true}
-                  /> */}
-
-                  <div className="filterDialogContent">
-                          
-                    <CSSTransitionGroup
-                          component="div"
-                          transitionName="opacity"
-                          transitionEnterTimeout={150}
-                          transitionLeaveTimeout={150}
-                        >
-                          <div style={{height:"6vh",overflowX:'scroll',display:'flex'}}>{chips}</div>
-                            <div>
-                              <DatePicker
-                                id="from-date"
-                                label="From Date"
-                                className="md-cell"
-                                displayMode="portrait"
-                              />
-                              <DatePicker
-                                id="to-date"
-                                label="To Date"
-                                className="md-cell"
-                                displayMode="portrait"
-                              />
-                            </div>
-                            <Autocomplete
-                              id="states-autocomplete"
-                              label="Select User/Users"
-                              data={filteredMails}
-                              dataLabel="name"
-                              dataValue="abbreviation"
-                              onAutocomplete={this.addState}
-                              clearOnAutocomplete
-                              deleteKeys="abbreviation"
-                            />
-                            <div style={{height:"6vh",display:'flex',justifyContent:"center",alignItems:"center"}}>
-                              <Button raised primary swapTheming onClick={this.apply}>Apply</Button>
-                            </div>
-                        </CSSTransitionGroup>
-                      </div>
-                  
-                </section>
-            </DialogContainer>}
-        
+        <div className="header">
+          <div className='heading'>Search Jobs</div>
         </div>
+        <div className='displaySection'>
+          <div className="filterSection">
+            <div className='filterItems'>
+              <Select
+                value={selectedOption}
+                onChange={this.onChange}
+                options={expOptions}
+                placeholder={`experience`}
+              />
+            </div>
+            <div className='filterItems'>
+              <Select
+                value={selectedOption}
+                onChange={this.onChange}
+                options={options}
+                placeholder={`location`}
+              />
+            </div>
+            <div className='filterItems'>
+              <Button raised primary swapTheming onClick={this.search}>Search</Button>
+            </div>
+          </div>
+
+          <div className="displayBarItem">
+            <div className="searchbarItem">
+              <div className="profile">
+              <Select
+                value={selectedOption}
+                onChange={this.onChange}
+                options={options}
+                placeholder={`experience`}
+              />
+              </div>
+            </div>
+            <div className="displayBarIframe">
+              {jobsfeedContent}
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 }

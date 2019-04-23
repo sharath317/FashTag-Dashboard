@@ -68,22 +68,6 @@
   .md-toolbar {
     height: 120px; } }
 
-@media screen and (min-width: 320px) {
-  .md-text-field {
-    font-size: 40px; }
-  .md-floating-label--inactive-sized {
-    font-size: 30px; }
-  .md-floating-label--floating {
-    font-size: 20px; }
-  .md-tile-text--primary {
-    font-size: 30px; }
-  .md-btn--text {
-    height: 80px;
-    width: 60vw;
-    margin-bottom: 6px;
-    margin-top: 6px;
-    font-size: 40px; } }
-
 .md-dialog-content--padded {
   padding: 0px; }
 
@@ -161,7 +145,7 @@
   background-color: grey; }
 
 .displayBar {
-  height: 82%;
+  height: 100%;
   width: 99%;
   overflow: auto; }
 
@@ -183,7 +167,7 @@
 .displaySection {
   display: flex;
   justify-content: space-evenly;
-  height: 93vh;
+  height: 90%;
   padding: 10px;
   flex-direction: column;
   align-items: center; }
@@ -196,13 +180,13 @@
 .header {
   display: flex;
   flex-direction: column;
-  height: 140px;
+  height: 10%;
   align-items: center;
   justify-content: space-between; }
 
 .heading {
   text-align: center;
-  font-size: 60px;
+  font-size: 40px;
   font-weight: 600;
   height: 70px;
   color: darkslategrey; }
@@ -234,58 +218,71 @@
   height: 100%;
   border: 0; }
 
-.scrolling-wrapper {
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap; }
-  .scrolling-wrapper .card {
-    display: inline-block; }
-
-.scrolling-wrapper-flexbox {
+.filterSection {
+  width: 100%;
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto; }
-  .scrolling-wrapper-flexbox .card {
-    flex: 0 0 auto;
-    margin-right: 3px; }
+  justify-content: space-evenly; }
+
+.filterItems {
+  width: 30%; }
 
 .card {
-  height: 90%;
-  background: #fc8019;
-  color: white;
-  font-size: 40px;
+  width: 47%;
+  color: #333;
+  font-size: 20px;
   text-align: center;
   margin: 10px;
   overflow: auto;
-  border: 2px solid green; }
-
-.scrolling-wrapper, .scrolling-wrapper-flexbox {
-  height: 15%;
-  width: 90vw;
-  border: 2px solid grey;
-  -webkit-overflow-scrolling: touch; }
-  .scrolling-wrapper::-webkit-scrollbar, .scrolling-wrapper-flexbox::-webkit-scrollbar {
-    display: none; }
+  border: 2px solid #ccc; }
 
 .displayBarItem {
-  height: 36vh;
-  margin: 45px auto;
+  height: 85%;
+  width: 100%;
+  margin: 8px;
+  padding: 8px;
   background-color: white;
   overflow: scroll;
   border: 2px solid orange;
-  border-radius: 25px; }
+  border-radius: 25px;
+  display: flex; }
 
 .displayBarIframe {
-  border: 0;
-  height: 36vh;
-  width: 100%; }
+  width: 69%;
+  margin-left: 31%;
+  display: flex;
+  flex-wrap: wrap; }
 
 .a {
   overflow: hidden;
   margin-top: -100px;
   height: 100px; }
 
+.searchbarItem {
+  width: 28%;
+  position: fixed; }
+
 .yo {
   height: 100%;
   border: 0px none;
   width: 100%; }
+
+.profile {
+  font-size: 14px;
+  text-align: center;
+  margin: 10px; }
+
+.profileItems {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px; }
+
+.profileLabel {
+  flex: 35%;
+  text-align: left; }
+
+.profileContent {
+  flex: 64%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
